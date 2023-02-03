@@ -1,0 +1,164 @@
+{
+  "publish": [
+    {
+    "provider": "generic",
+    "url": "https://releases.invochat.com/desktop"
+    }
+  ],
+  "appId": "Invochat.Desktop",
+  "artifactName": "${version}/${name}-${version}-${os}-${arch}.${ext}",
+  "directories": {
+    "buildResources": "src/assets",
+    "output": "release"
+  },
+  "extraMetadata": {
+    "main": "index.js"
+  },
+  "files": [
+    "node_modules/bootstrap/dist/**",
+    "node_modules/font-awesome/{css,fonts}/**",
+    "!**/node_modules/macos-notification-state/build/Release/.forge-meta",
+    {
+      "from": "dist",
+      "to": ".",
+      "filter": "**/*"
+    }
+  ],
+  "protocols": [
+    {
+      "name": "Invochat",
+      "schemes": [
+        "Invochat"
+      ]
+    }
+  ],
+  "beforePack": "scripts/beforepack.js",
+  "afterPack": "scripts/afterpack.js",
+  "afterSign": "scripts/notarize.js",
+  "afterAllArtifactBuild": "scripts/afterbuild.js",
+  "deb": {
+    "artifactName": "${version}/${name}_${version}-1_${arch}.${ext}",
+    "synopsis": "Invochat Desktop App",
+    "depends": [
+      "gconf2",
+      "gconf-service",
+      "libnotify4",
+      "libxtst6",
+      "libnss3"
+    ],
+    "category": "contrib/net",
+    "priority": "optional"
+  },
+  "asarUnpack": [
+    "./node_modules/macos-notification-state/**/*",
+    "./node_modules/windows-focus-assist/**/*"
+  ],
+  "linux": {
+    "category": "Network;InstantMessaging",
+    "target": [
+      "deb",
+      "tar.gz",
+      "appimage",
+      "rpm"
+    ],
+    "icon": "src/assets/icon.icns",
+    "extraFiles": [
+      {
+        "filter": [
+          "LICENSE.txt",
+          "NOTICE.txt"
+        ]
+      },
+      {
+        "from": "src/assets/linux",
+        "filter": [
+          "create_desktop_file.sh",
+          "app_icon.png",
+          "README.md"
+        ]
+      }
+    ]
+  },
+  "mac": {
+    "category": "public.app-category.productivity",
+    "target": [
+      "zip",
+      "dmg"
+    ],
+    "darkModeSupport": true,
+    "extraResources": [
+      {
+        "filter": [
+          "LICENSE.txt",
+          "NOTICE.txt"
+        ]
+      }
+    ],
+    "icon": "src/assets/osx/osx_icon.icns",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": true,
+    "entitlements": "./entitlements.mac.plist",
+    "entitlementsInherit": "./entitlements.mac.plist",
+    "extendInfo": {
+      "NSMicrophoneUsageDescription": "Microphone access may be used by Invochat plugins, such as Jitsi video conferencing.",
+      "NSCameraUsageDescription": "Camera access may be used by Invochat plugins, such as Jitsi video conferencing.",
+      "LSFileQuarantineEnabled": true
+  }
+  },
+  "mas": {
+    "hardenedRuntime": false,
+    "entitlements": "./entitlements.mas.plist",
+    "entitlementsInherit": "./entitlements.mas.inherit.plist",
+    "entitlementsLoginHelper": "./entitlements.mas.inherit.plist",
+    "provisioningProfile": "./mas.provisionprofile",
+    "extendInfo": {
+      "ITSAppUsesNonExemptEncryption": false
+    },
+    "singleArchFiles": "*"
+  },
+  "masDev": {
+    "provisioningProfile": "./mas-dev.provisionprofile"
+  },
+  "dmg": {
+    "background": "src/assets/osx/DMG_BG.png",
+    "contents": [
+      {
+        "x": 135,
+        "y": 165
+      },
+      {
+        "x": 407,
+        "y": 165,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ],
+    "iconSize": 120,
+    "iconTextSize": 14,
+    "window": {
+        "height": 380
+    }
+  },
+  "squirrelWindows": {
+    "iconUrl": "file://src/assets/icon.ico",
+    "artifactName": "${version}/${name}-setup-${version}-${arch}.${ext}"
+  },
+  "win": {
+    "target": [
+      "nsis",
+      "zip"
+    ],
+    "extraFiles": [
+      {
+        "filter": [
+          "LICENSE.txt",
+          "NOTICE.txt"
+        ]
+      }
+    ],
+    "publisherName": "CN=\"Invochat, Inc.\", O=\"Invochat, Inc.\", L=Palo Alto, S=California, C=US"
+  },
+  "nsis": {
+    "artifactName": "${version}/${name}-setup-${version}-win.${ext}"
+  }
+}
